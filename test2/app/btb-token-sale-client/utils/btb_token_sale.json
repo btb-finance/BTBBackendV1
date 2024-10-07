@@ -1,0 +1,331 @@
+{
+  "version": "0.1.0",
+  "name": "btb_token_sale",
+  "instructions": [
+    {
+      "name": "initializeSale",
+      "accounts": [
+        {
+          "name": "sale",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "btbMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "usdtMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ownerBtbAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "saleVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "startTime",
+          "type": "i64"
+        },
+        {
+          "name": "endTime",
+          "type": "i64"
+        },
+        {
+          "name": "totalTokensForSale",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "processPurchase",
+      "accounts": [
+        {
+          "name": "sale",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "buyerUsdtAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyerBtbAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "saleUsdtAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "saleVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vestingInfo",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "isVested",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "claimVestedTokens",
+      "accounts": [
+        {
+          "name": "sale",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vestingInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "buyerBtbAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "saleVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "emergencyWithdraw",
+      "accounts": [
+        {
+          "name": "sale",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "ownerBtbAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "saleVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Sale",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "btbMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdtMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "saleVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "endTime",
+            "type": "i64"
+          },
+          {
+            "name": "totalTokensForSale",
+            "type": "u64"
+          },
+          {
+            "name": "tokensSold",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VestingInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "buyer",
+            "type": "publicKey"
+          },
+          {
+            "name": "totalVested",
+            "type": "u64"
+          },
+          {
+            "name": "totalClaimed",
+            "type": "u64"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "PurchaseEvent",
+      "fields": [
+        {
+          "name": "buyer",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "isVested",
+          "type": "bool",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ClaimEvent",
+      "fields": [
+        {
+          "name": "buyer",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "EmergencyWithdrawEvent",
+      "fields": [
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "SaleNotActive",
+      "msg": "Sale is not active"
+    },
+    {
+      "code": 6001,
+      "name": "InsufficientTokens",
+      "msg": "Insufficient tokens available for sale"
+    },
+    {
+      "code": 6002,
+      "name": "NoTokensToClaim",
+      "msg": "No tokens available to claim"
+    },
+    {
+      "code": 6003,
+      "name": "SaleNotEnded",
+      "msg": "Sale has not ended yet"
+    }
+  ]
+}
